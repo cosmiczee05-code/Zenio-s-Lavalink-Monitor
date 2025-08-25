@@ -1,6 +1,6 @@
 # Zenio-s-Lavalink-Monitor
 A Discord bot too keep check of your lavalink status and availability.
-<h1 align="center"><img src="Images/image3.png" alt="image3.png" width="40">Lavalink Status Monitor</h1>
+<h1 align="center"><img src="Images/logo.png" alt="image3.png" width="40">Lavalink Status Monitor</h1>
 
 <p align="center"><strong>Note:</strong> This monitor only supports Lavalink v4.</p>
 
