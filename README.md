@@ -69,5 +69,5 @@ A Discord bot too keep check of your lavalink status and availability.
 
 
 <div align="center">
-  Made with ❤️ by the Cocaine Zenio Dev Team
+  Made with ❤️ by the Cocaine - Zenio Dev Team
 </div>
