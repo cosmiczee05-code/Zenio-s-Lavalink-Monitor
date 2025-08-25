@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zenio Lavalink Monitor</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #1f1f23, #23272a);
+      color: #ffffff;
+      transition: background 0.5s, color 0.5s;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .neon-text {
+      color: #8ab4f8;
+      text-shadow: 0 0 10px #8ab4f8, 0 0 20px #8ab4f8;
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .loader {
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid #8ab4f8;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .light-mode {
+      background: linear-gradient(to right, #f0f0f0, #e4e4e7);
+      color: #111827;
+    }
+
+    .light-mode .glass {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.1);
+      color: #111827;
+    }
+
+    .light-mode .neon-text {
+      color: #2563eb;
+      text-shadow: none;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col" id="app">
+  <!-- Navbar -->
+  <nav class="w-full fixed top-0 z-20 glass px-6 py-4 flex flex-wrap gap-2 justify-between items-center shadow-md">
+    <a class="text-2xl font-extrabold tracking-wide neon-text" href="#">Zenio Lavalink</a>
+    <div class="flex flex-wrap gap-3 items-center text-sm font-semibold">
+      <a href="#home" class="hover:text-indigo-400 transition">Home</a>
+      <a href="#monitor" class="hover:text-indigo-400 transition">Monitor</a>
+      <a href="#about" class="hover:text-indigo-400 transition">About</a>
+      <a href="#contact" class="hover:text-indigo-400 transition">Contact</a>
+      <button id="themeToggle" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-2 rounded-lg text-white">
+        <i class="fas fa-adjust"></i>
+      </button>
+      <a href="https://github.com/cosmiczee05-code/Zenio-s-Lavalink-Monitor" target="_blank"
+        class="bg-indigo-600 hover:bg-indigo-500 px-3 py-2 rounded-lg">
+        <i class="fab fa-github text-white text-lg"></i>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="home" class="pt-32 pb-20 text-center fade-in">
+    <h1 class="text-5xl font-extrabold mb-4 neon-text">Zenio Lavalink Monitor</h1>
+    <p class="text-lg text-gray-300 max-w-xl mx-auto mb-6">
+      Realtime monitoring dashboard for Lavalink nodes – track memory, load, and uptime like never before.
+    </p>
+    <a href="#monitor"
+      class="inline-block mt-4 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 transition rounded-full text-white font-semibold shadow-lg">
+      View Monitor
+    </a>
+  </section>
+
+  <!-- Monitor -->
+  <main id="monitor" class="container mx-auto px-6 py-16 fade-in">
+    <h2 class="text-3xl font-bold text-center mb-4">📡 Node Status</h2>
+
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-3">
+      <input type="text" id="searchInput"
+        class="w-full sm:w-1/3 p-2 rounded-md text-black"
+        placeholder="Search node name..." />
+
+      <div class="flex gap-2">
+        <select id="sortSelect" class="p-2 rounded-md text-black">
+          <option value="default">Sort By</option>
+          <option value="memory">Memory Usage</option>
+          <option value="players">Players</option>
+          <option value="status">Status</option>
+        </select>
+
+        <select id="refreshRate" class="p-2 rounded-md text-black">
+          <option value="5000">5s</option>
+          <option value="10000">10s</option>
+          <option value="15000" selected>15s</option>
+          <option value="30000">30s</option>
+        </select>
+      </div>
+
+      <span class="text-sm text-gray-400" id="lastUpdated">Last updated: --</span>
+    </div>
+
+    <div id="loading" class="text-center text-gray-400">
+      <div class="loader mb-2"></div>
+      Fetching stats...
+    </div>
+    <div id="refresh-notice" class="text-center text-sm italic text-gray-500 mb-6 hidden">
+      Refreshing every 15 seconds...
+    </div>
+    <div id="stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+  </main>
+
+  <!-- About -->
+  <section id="about" class="py-16 bg-[#202225] text-center fade-in">
+    <h2 class="text-3xl font-bold mb-4">About</h2>
+    <p class="text-gray-300 max-w-2xl mx-auto">
+      Zenio Lavalink Monitor is built to help developers ensure smooth audio streaming. Designed with elegance and usability in mind.
+    </p>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="py-16 text-center fade-in">
+    <h2 class="text-3xl font-bold mb-4">Contact</h2>
+    <p class="text-gray-300">Need help or want to contribute? Join our community.</p>
+    <a href="https://discord.gg/kAYpdenZ8b" target="_blank"
+      class="inline-flex items-center gap-2 mt-4 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-full transition font-semibold text-white">
+      <i class="fab fa-discord text-xl"></i> Join Discord
+    </a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[#18191c] py-6 text-center text-gray-500 text-sm fade-in">
+    <p>Made with ❤️ by <a href="https://github.com/cosmiczee05-code/Zenio-s-Lavalink-Monitor"
+        class="text-indigo-400 hover:underline">Cocaine Dev Team</a></p>
+  </footer>
+
+  <!-- JS Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const statsDiv = document.getElementById('stats');
+      const loadingDiv = document.getElementById('loading');
+      const refreshNoticeDiv = document.getElementById('refresh-notice');
+      const lastUpdated = document.getElementById('lastUpdated');
+      const searchInput = document.getElementById('searchInput');
+      const themeToggle = document.getElementById('themeToggle');
+      const app = document.getElementById('app');
+      const sortSelect = document.getElementById('sortSelect');
+      const refreshRateSelect = document.getElementById('refreshRate');
+
+      // THEME TOGGLE + SAVE
+      themeToggle.addEventListener('click', () => {
+        app.classList.toggle('light-mode');
+        localStorage.setItem('theme', app.classList.contains('light-mode') ? 'light' : 'dark');
+      });
+      if (localStorage.getItem('theme') === 'light') {
+        app.classList.add('light-mode');
+      }
+
+      let allStats = [];
+      let intervalId;
+
+      function showToast(msg, type = "error") {
+        const toast = document.createElement("div");
+        toast.className = `fixed top-5 right-5 px-4 py-2 rounded-lg ${type === "error" ? "bg-red-600" : "bg-green-600"} text-white shadow-lg z-50`;
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+      }
+
+      function renderStats(filter = "") {
+        statsDiv.innerHTML = "";
+
+        const filtered = allStats.filter(stat => stat.node.toLowerCase().includes(filter.toLowerCase()));
+
+        filtered.forEach(stat => {
+          const card = document.createElement('div');
+          card.className = "glass p-6 rounded-xl transition-all hover:scale-105 duration-300 fade-in";
+
+          const memoryPercent = ((stat.memoryUsed / stat.memoryReservable) * 100).toFixed(1);
+          const systemLoad = parseFloat(stat.systemLoad).toFixed(2);
+          const lavalinkLoad = parseFloat(stat.lavalinkLoad).toFixed(2);
+
+          card.innerHTML = `
+            <h3 class="text-xl font-bold mb-3 flex items-center justify-between">
+              ${stat.node}
+              <span class="flex items-center text-xs px-2 py-1 rounded-full ${stat.online ? 'bg-green-500' : 'bg-red-500'}">
+                <span class="h-2 w-2 mr-1 rounded-full ${stat.online ? 'bg-green-300 animate-pulse' : 'bg-red-400 animate-bounce'}"></span>
+                ${stat.online ? 'Online' : 'Offline'}
+              </span>
+            </h3>
+            <p><strong>Status:</strong> ${stat.status}</p>
+            <p><strong>Players:</strong> ${stat.activePlayers}/${stat.players}</p>
+            <p><strong>Uptime:</strong> ${stat.uptime}</p>
+            <p><strong>Cores:</strong> ${stat.cores ?? 'N/A'}</p>
+            <p><strong>Memory:</strong> ${stat.memoryUsed} / ${stat.memoryReservable} MB</p>
+            <div class="w-full bg-gray-700 h-2 rounded mb-2"><div class="h-full bg-blue-400 rounded" style="width: ${memoryPercent}%"></div></div>
+            <p><strong>System Load:</strong> ${systemLoad}%</p>
+            <p><strong>Lavalink Load:</strong> ${lavalinkLoad}%</p>
+          `;
+
+          statsDiv.appendChild(card);
+        });
+      }
+
+      async function fetchStats() {
+        try {
+          const response = await fetch('/stats');
+          const stats = await response.json();
+
+          allStats = stats;
+
+          // apply sorting
+          let key = sortSelect.value;
+          if (key === "memory") allStats.sort((a, b) => (b.memoryUsed / b.memoryReservable) - (a.memoryUsed / a.memoryReservable));
+          if (key === "players") allStats.sort((a, b) => b.activePlayers - a.activePlayers);
+          if (key === "status") allStats.sort((a, b) => b.online - a.online);
+
+          renderStats(searchInput.value);
+          loadingDiv.classList.add('hidden');
+          refreshNoticeDiv.classList.remove('hidden');
+
+          const now = new Date();
+          lastUpdated.textContent = `Last updated: ${now.toLocaleTimeString()}`;
+        } catch (err) {
+          console.error('Fetch error:', err);
+          loadingDiv.innerHTML = `<p class="text-red-400">Failed to load stats. Retrying...</p>`;
+          showToast("Failed to load Lavalink stats!", "error");
+        }
+      }
+
+      searchInput.addEventListener('input', () => {
+        renderStats(searchInput.value);
+      });
+
+      sortSelect.addEventListener('change', () => {
+        renderStats(searchInput.value);
+      });
+
+      refreshRateSelect.addEventListener('change', e => {
+        clearInterval(intervalId);
+        let refreshInterval = parseInt(e.target.value);
+        intervalId = setInterval(fetchStats, refreshInterval);
+        document.getElementById("refresh-notice").textContent = `Refreshing every ${refreshInterval / 1000} seconds...`;
+      });
+
+      fetchStats();
+      intervalId = setInterval(fetchStats, 15000); // default 15s
+    });
+  </script>
+</body>
+</html>
