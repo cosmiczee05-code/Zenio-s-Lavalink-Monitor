@@ -66,7 +66,22 @@ A Discord bot too keep check of your lavalink status and availability.
     (https://uptimerobot.com) or any other service you like. And you are good to go
 
     Now your server will be online 24/7 
+### Web Monitor Preview
 
+![Discord Monitor Preview](/Images/image1.png)
+![Web Monitor Preview](/Images/image2.png)
+
+- <h1 align="center">If you encounter any error join our discord server or open a issue on the github page</h1>
+      
+    <div align="left">
+  <a href="https://discord.gg/32sW7XPMpJ" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Discord&logo=discord&label=&color=7289DA&logoColor=white&labelColor=&style=for-the-badge" height="35" alt="discord logo"  />
+  </a>
+  <a href="https://github.com/cosmiczee05-code/Zenio-s-Lavalink-Monitor/issues" target="_blank">
+    <img src="https://img.shields.io/static/v1?message=Github&logo=github&label=&color=000000&logoColor=white&labelColor=&style=for-the-badge" height="35" alt="github logo"  />
+  </a>
+  
+</div>
 
 <div align="center">
   Made with ❤️ by the Cocaine - Zenio Dev Team
