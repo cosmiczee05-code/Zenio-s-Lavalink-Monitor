@@ -1,6 +1,6 @@
 # Zenio-s-Lavalink-Monitor
 A Discord bot too keep check of your lavalink status and availability.
-<h1 align="center"><img src="Images/logo.png" alt="DaPirates Logo" width="40">Lavalink Status Monitor</h1>
+<h1 align="center"><img src="Images/logo.png" alt="logo.png" width="40">Lavalink Status Monitor</h1>
 
 <p align="center"><strong>Note:</strong> This monitor only supports Lavalink v4.</p>
 
@@ -27,7 +27,7 @@ A Discord bot too keep check of your lavalink status and availability.
 4. **Start the Bot from vs code**:
     - Run the following commands to start the bot:
     ```sh
-    npm run start or src/index.js
+    npm run start
     ```
 5. **Start the Bot from panel**:
     - Run the following commands to start the bot:
